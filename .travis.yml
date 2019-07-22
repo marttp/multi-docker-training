@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t tpcoder/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true tpcoder/react-test npm test
+
+after_success:
+  - docker build -t tpcoder/multi-client ./client
+  - docker build -t tpcoder/multi-nginx ./nginx
+  - docker build -t tpcoder/multi-server ./server
+  - docker build -t tpcoder/multi-worker ./worker
+
+  # Set env variable docker login data to travis
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take to Dockerhub
+  - docker push tpcoder/multi-client
+  - docker push tpcoder/multi-nginx
+  - docker push tpcoder/multi-server
+  - docker push tpcoder/multi-worker
