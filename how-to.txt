@@ -1,0 +1,10 @@
+1. Build Docker client on dev
+
+docker build -f Dockerfile.dev .
+docker run **ID[as65das561]
+
+2. Build Docker server & worker on dev
+
+3. Add docker-compose
+
+docker-compose up
